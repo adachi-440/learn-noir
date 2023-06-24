@@ -1,10 +1,10 @@
-fn main(x : Field, y : pub Field) {
-    constrain x != y;
+use dep::std;
+
+fn main() {
+    std::println("👋 hello world");
 }
 
 #[test]
-fn test_main() {
-    main(1, 2);
-    // Uncomment to make test fail
-    // main(1, 1);
+fn test() {
+    main();
 }
