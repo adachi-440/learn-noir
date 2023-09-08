@@ -74,11 +74,10 @@ impl<PROOF_LEN, VALUE_LEN> TrieProof<32, PROOF_LEN, VALUE_LEN>
 
             assert(!range_p | verify_node_hash(node, extracted_hash)); // If within range, node hash should match the hash extracted from the preceding node.
             
- 	        let lookup: ([u8; 32], Field) = resolve_nibble32(key_nibbles, key_ptr, node); // Resolve next nibble(s)
-
             // Extract hash and advance key pointer if within range
             if range_p
             {
+                let lookup: ([u8; 32], Field) = resolve_nibble32(key_nibbles, key_ptr, node); // Resolve next nibble(s)
                 extracted_hash = lookup.0;
                 key_ptr = lookup.1;
             }
@@ -95,14 +94,14 @@ impl<PROOF_LEN, VALUE_LEN> TrieProof<32, PROOF_LEN, VALUE_LEN>
         let rlp_list: rlp::RLP_List<MAX_NUM_FIELDS> = rlp::decode1_small_lis(node); // Both slots contain less than 56 bytes.
         
         // ...except extract a value rather than a key.
- 	    let (mut extracted_value, extracted_value_length, terminal_key_ptr): ([u8; VALUE_LEN], Field, Field) = resolve2(LEAF, node, rlp_list, key_nibbles, key_ptr);
+ 	    let (mut extracted_value, extracted_value_length, terminal_key_ptr): ([u8; 33], Field, Field) = resolve2(LEAF, node, rlp_list, key_nibbles, key_ptr);
 
-        assert((extracted_value_length as u32) <= (VALUE_LEN as u32)); // Extracted value should fit in a byte array of length VALUE_LEN.
+        assert((extracted_value_length as u32) <= 33); // Extracted value be at most 33 bytes with RLP header
  	    key_ptr = terminal_key_ptr;
 
         assert(key_ptr == 2*key.len()); // All of the key has been exhausted.
 
-        // // Decode extracted value
+        // Decode extracted value
         let (dec_value_offset, dec_value_len) = rlp::decode0(extracted_value);
         assert(dec_value_len == value_length);
         dep::std::println(dec_value_len);
@@ -159,11 +158,10 @@ impl<PROOF_LEN, VALUE_LEN> TrieProof<20, PROOF_LEN, VALUE_LEN>
 
             assert(!range_p | verify_node_hash(node, extracted_hash)); // If within range, node hash should match the hash extracted from the preceding node.
             
- 	        let lookup: ([u8; 32], Field) = resolve_nibble32(key_nibbles, key_ptr, node); // Resolve next nibble(s)
-
             // Extract hash and advance key pointer if within range
             if range_p
             {
+                let lookup: ([u8; 32], Field) = resolve_nibble32(key_nibbles, key_ptr, node); // Resolve next nibble(s)
                 extracted_hash = lookup.0;
                 key_ptr = lookup.1;
             }
@@ -180,9 +178,9 @@ impl<PROOF_LEN, VALUE_LEN> TrieProof<20, PROOF_LEN, VALUE_LEN>
         let rlp_list: rlp::RLP_List<MAX_NUM_FIELDS> = rlp::decode1(node); // TODO: For storage proofs, replace with decode1_small_lis
         
         // ...except extract a value rather than a key.
- 	    let (mut extracted_value, extracted_value_length, terminal_key_ptr): ([u8; VALUE_LEN], Field, Field) = resolve2(LEAF, node, rlp_list, key_nibbles, key_ptr);
+ 	    let (mut extracted_value, extracted_value_length, terminal_key_ptr): ([u8; MAX_ACCOUNT_STATE_LENGTH], Field, Field) = resolve2(LEAF, node, rlp_list, key_nibbles, key_ptr);
 
-        assert((extracted_value_length as u32) <= (VALUE_LEN as u32)); // Extracted value should fit in a byte array of length VALUE_LEN.
+        assert((extracted_value_length as u32) <= (VALUE_LEN as u32)); // Extracted value should fit in a byte array of length MAX_ACCOUNT_STATE_LENGTH.
  	    key_ptr = terminal_key_ptr;
 
         assert(key_ptr == 2*key.len()); // All of the key has been exhausted.
