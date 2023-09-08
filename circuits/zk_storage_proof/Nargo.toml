@@ -1,6 +1,8 @@
 [package]
+name = "zk_storage_proof"
 authors = [""]
-compiler_version = "0.8.0"
+type = "bin"
+compiler_version = "0.10.4"
 
 [dependencies]
-trie = {path = "../lib"}
+noir_trie_proofs = { git = "https://github.com/aragonzkresearch/noir-trie-proofs", tag = "main", directory = "lib" }
