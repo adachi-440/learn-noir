@@ -5,4 +5,4 @@ type = "bin"
 compiler_version = "0.10.4"
 
 [dependencies]
-noir_trie_proofs = { git = "https://github.com/aragonzkresearch/noir-trie-proofs", tag = "main", directory = "lib" }
+noir_trie_proofs = { git = "https://github.com/aragonzkresearch/noir-trie-proofs.git/", tag = "main", directory = "lib" }
